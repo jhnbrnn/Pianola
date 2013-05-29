@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="../lib/jquery-1.8.2.js"></script>
+  <script src="scratch2.js"></script>
+</head>
+
+<body>
+  <button id="play">play</button>
+  <button id="stop">stop</button>
+  <button id="step">step</button>
+  <button id="oct-up">Up octave</button>
+  <button id="oct-down">Down octave</button>
+  <button id="chord">Chord that shit</button>
+  <select id="oscType">
+    <option value="0">Sine</option>
+    <option value="1">Square</option>
+    <option value="2">Sawtooth</option>
+    <option value="3">triangle</option>
+  </select>
+  <input id="gain" type="range" min="0" max="1" value="0.5" step=".1">
+  <input id="hertz" type="text" readonly>
+  <!--<input id="freq" type="range" min="55" max="1760" value="440" step="1">-->
+</body>
+
+</html>

@@ -1,9 +1,9 @@
 /**
- * 
+ *
  * v0.1 of the Pianola library
  *
  * Copyright (c) 2012 John Brennan [johnalanbrennan@gmail.com]
- * 
+ *
  * Pianola is a library for reading and writing music notation created
  * by the Vexflow library (http://www.vexflow.com).
  *
@@ -24,7 +24,7 @@ var pianola = function(param) {
 
   that.init = function() {
     var frame = param.elem;
-    frame.innerHTML = 
+    frame.innerHTML =
     '<div class=\"inner\"> \
       <div id="note-info"> \
         <span id="note-info-type"></span> \
@@ -68,8 +68,6 @@ var pianola = function(param) {
   that.trackingCanvas = function() {
     return that.elem().firstElementChild;
   }
-
-
 
   that.setStaveStart = function(stave) {
     stave_start = stave.start_x + stave.glyph_start_x;
@@ -144,7 +142,7 @@ var pianola = function(param) {
 
       prev_note_locations.unshift(note);
       cx.fillStyle = '#FFA033';
-      cx.fillRect(note, 0, 4, 122);   
+      cx.fillRect(note, 0, 4, 122);
     }
   }
 

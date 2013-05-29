@@ -1,0 +1,184 @@
+@font-face {
+    font-family: 'VollkornRegular';
+    src: url('fonts/Vollkorn-Regular-webfont.eot');
+    src: url('fonts/Vollkorn-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Vollkorn-Regular-webfont.woff') format('woff'),
+         url('fonts/Vollkorn-Regular-webfont.ttf') format('truetype'),
+         url('fonts/Vollkorn-Regular-webfont.svg#VollkornRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'VollkornBold';
+    src: url('./fonts/Vollkorn-Bold-webfont.eot');
+    src: url('./fonts/Vollkorn-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/Vollkorn-Bold-webfont.woff') format('woff'),
+         url('./fonts/Vollkorn-Bold-webfont.ttf') format('truetype'),
+         url('./fonts/Vollkorn-Bold-webfont.svg#VollkornBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'VollkornItalic';
+    src: url('./fonts/Vollkorn-Italic-webfont.eot');
+    src: url('./fonts/Vollkorn-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/Vollkorn-Italic-webfont.woff') format('woff'),
+         url('./fonts/Vollkorn-Italic-webfont.ttf') format('truetype'),
+         url('./fonts/Vollkorn-Italic-webfont.svg#VollkornItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'VollkornBoldItalic';
+    src: url('./fonts/Vollkorn-BoldItalic-webfont.eot');
+    src: url('./fonts/Vollkorn-BoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/Vollkorn-BoldItalic-webfont.woff') format('woff'),
+         url('./fonts/Vollkorn-BoldItalic-webfont.ttf') format('truetype'),
+         url('./fonts/Vollkorn-BoldItalic-webfont.svg#VollkornBoldItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+  font-family: 'VollkornRegular';
+  background: #eee;
+}
+
+canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1200px;
+  //height: 100%;
+}
+
+canvas#tracker {
+  background: #fefefe;
+}
+
+div#intro {
+  width: 960px;
+  margin: 0 auto;
+  line-height: 130%;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+div#pianola {
+  width: 100%;
+  vertical-align: baseline;
+  
+  .inner {
+    width: 960px;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+div#pianola-viewer {
+  width: 515px;
+  height: 120px;
+  overflow-x: hidden;
+  position: relative;
+  border: 1px solid #dedede;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+div.pianola-controls-h {
+  margin-top:20px;
+  margin-left: 10px;
+  
+  .pianola-button {
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-right: 10px;
+  }
+}
+
+div.pianola-controls-v {
+  margin-top: -20px;
+  margin-left: 10px;
+  display: inline-block;
+  vertical-align: baseline;
+
+  .pianola-button {
+    float: left;
+    clear: both;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+div.pianola-tempo {
+  margin-top: 20px;
+}
+
+div#note-info {
+  width:100px;
+  height: 118px;
+  border: 2px solid #dedede;
+  display: inline-block;
+  vertical-align: top;
+  span {
+    text-align: center;
+    display: block;
+
+    &#note-info-type {
+      text-decoration: underline;
+      padding-bottom: 5px;
+    }
+    &#note-info-note {
+      font-size: 24px;
+    }
+  }
+}
+
+header {
+  width: 100%;
+  text-align: center;
+  h1 {
+    font-family: 'VollkornBold', sans-serif;
+    width: 960px;
+    text-align: center;
+    margin: 0 auto;
+  }
+  p {
+    font-size: 11px;
+  }
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  width:100%;
+  text-align: center;
+  small {
+    font-size: 11px;  
+  }
+}
+
+span {
+  &.pianola-control {
+    background: #ccc;
+    padding: 10px 20px;
+    margin-right: 10px;
+    color: #111;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+
+    &:hover,
+    &:active {
+      background: #aaa;
+    }
+  }
+}

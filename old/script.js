@@ -1,13 +1,5 @@
-$(document).ready(function() {
-
-});
-
-window.onload = function() {
-
-  var p = pianola({"elem": document.getElementById("pianola")});
-  p.init();
-
-  var canvas = p.getCanvas();
+$(document).ready(function(){
+  var canvas = $("div#pianola-viewer canvas#piano")[0];
   var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
 
   var ctx = renderer.getContext();
@@ -42,11 +34,12 @@ window.onload = function() {
 
   // Format and justify the notes to 500 pixels
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
-  //var formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
   // Render voice
 
-  p.setStaveStart(stave);
-  p.setNotes([notes]);
-
+  $.Pianola = {};
+  $.Pianola.notes = [notes];
+  $.Pianola.stave = stave;
+  
   voice.draw(ctx, stave);
-}
+});
