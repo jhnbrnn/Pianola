@@ -1,4 +1,4 @@
-that.getBarRunning = function() {
+  that.getBarRunning = function() {
     return bar_running;
   }
 
@@ -15,7 +15,7 @@ that.getBarRunning = function() {
   that.getRunning = function() {
     return running;
   }
-  
+
   that.setRunning = function(status) {
     if (typeof status === "boolean") {
       running = status;
@@ -54,51 +54,6 @@ that.getBarRunning = function() {
     }
   }
 
-  that.scrollLeftFull = function() {
-    if (running === false && bar_running === false) {
-      return;
-    }
-    var widthOfViewerWindow = that.elem().clientWidth,
-        widthOfCanvas       = that.getCanvas().width, 
-        currentBarPos       = bar_location, 
-        widthOfBar          = 4,
-        heightOfBar         = that.getCanvas().height,
-        scroll              = that.elem().scrollLeft;
-    var redrawBar = function() {
-          var cx = that.trackingCanvas().getContext('2d');
-          cx.clearRect(currentBarPos-1, 0, widthOfBar, heightOfBar);
-          cx.fillRect(currentBarPos, 0, widthOfBar, heightOfBar);
-          currentBarPos++;
-          that.setBarLocation(currentBarPos);
-        };
-
-    // check if tracking bar is halfway across viewer window && width of canvas > width of window
-    // if so, scroll bar and window
-    if (running && bar_running && widthOfCanvas > widthOfViewerWindow && currentBarPos >= ((widthOfViewerWindow / 2) + (widthOfBar / 2)) ) {
-      redrawBar();
-      that.elem().scrollLeft++;
-      scroll++;
-    }
-    // else, scroll bar
-    else {
-      redrawBar();
-    }
-
-    // check if we've reached end of canvas. 
-    if (running === false && currentBarPos >= widthOfCanvas - 10) {
-      bar_running = false;
-      return;
-    }
-    else if ((scroll + widthOfViewerWindow + 20) >= widthOfCanvas) {
-      running = false;
-      sc = setTimeout(that.scrollLeftFull, (1/tempo)*1000);
-    }
-    else {
-      sc = setTimeout(that.scrollLeftFull, (1/tempo)*1000);
-    }
-
-  }
-
   that.player = function() {
     console.log("now playing at " + tempo + "bpm");
     running = true;
@@ -129,7 +84,7 @@ that.getBarRunning = function() {
   var tempoSave = document.getElementById("tempo-save");
   var tempoForm = document.getElementById("tempo-form");
   var tempoSpan = document.getElementById('tempo-amount');
-  
+
   var p = pianola({"elem": document.getElementByID("pianola")});
   p.init();
 
@@ -137,11 +92,11 @@ that.getBarRunning = function() {
                    "noteInfoElem": document.getElementById("note-info"),
                   });
   var bpm = p.getTempo();
-  
+
   if (tempoSpan.innerText === "") {
     tempoSpan.innerText = bpm + " BPM";
   }
-  
+
   p.setStaveStart($.Pianola.stave);
   p.setNotes($.Pianola.notes);
 
@@ -154,7 +109,7 @@ that.getBarRunning = function() {
   play.onclick = function() {
     p.player();
   }
-  
+
   rewind.onclick = function() {
     p.rewinder();
   }
@@ -178,7 +133,7 @@ that.getBarRunning = function() {
   tempoForm.onsubmit = function() {
     event.preventDefault();
     bpm = p.setTempo(parseInt(document.getElementById('tempo-value').value));
-    document.getElementById('tempo-amount').innerText = bpm + " BPM";    
+    document.getElementById('tempo-amount').innerText = bpm + " BPM";
   }
 */
   }
