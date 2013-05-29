@@ -77,6 +77,7 @@ var pianola = function(param) {
       } else {
         stave.setContext(ctx).draw();
       }
+      console.log(stave);
       var notes = renderNotesInMeasure(i, notesArray, beat_value, number_of_beats, ctx, stave);
       all_notes.push(notes);
       if (i == 0) {
@@ -94,7 +95,7 @@ var pianola = function(param) {
         beams = [],
         beatsLength = 0,
         next;
-    //@TODO handle measure counting in this, incl. recursive call below
+
     for (var x = 0; x < notesArray.length; x++) {
       var note = notesArray[x];
       beatsLength += noteLength(note[1], beatNum);
@@ -166,7 +167,7 @@ var pianola = function(param) {
 
   //@TODO should parse noteString to handle
   // values above 32nd notes
-  // @TODO this isn't calculating correctly
+  // @TODO is this calculating correctly?
   var noteLength = function(noteString, beatNum) {
     switch(noteString) {
       case "w":
@@ -222,7 +223,13 @@ var pianola = function(param) {
     for (var x = 0; x < arr.length; x++) {
       for (var y = 0; y < arr[x].length; y++) {
 
-        var starter = stave_start + x*500;
+        if (x==0) {
+          var starter = stave_start;
+        } else {
+          //@TODO don't use fixed vals
+          var starter = x*530;
+        }
+        //var starter = stave_start + x*500;
         notes.push({
           noteObj: arr[x][y],
           noteLocation: arr[x][y].tickContext.x + starter,
