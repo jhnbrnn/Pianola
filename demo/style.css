@@ -34,7 +34,6 @@ canvas {
   position: absolute;
   left: 0;
   top: 0;
-  width: 1200px;
 }
 canvas#tracker {
   background: #fefefe;
@@ -56,8 +55,8 @@ div#pianola .inner {
   text-align: center;
 }
 div#pianola-viewer {
-  width: 1015px;
-  height: 120px;
+  width: 515px;
+  height: 130px;
   overflow-x: hidden;
   position: relative;
   border: 1px solid #dedede;
@@ -90,7 +89,7 @@ div.pianola-tempo {
 }
 div#note-info {
   width: 100px;
-  height: 118px;
+  height: 128px;
   border: 2px solid #dedede;
   display: inline-block;
   vertical-align: top;

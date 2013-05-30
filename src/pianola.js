@@ -21,7 +21,10 @@ var pianola = function(param) {
       prev_note_locations = [],
       stave_start         = 0,
       stave_end           = 0,
-      lines               = false;
+      lines               = false,
+      stave_length        = 500,
+      player_current_note = 0,
+      num_of_beats        = 0;
 
   that.init = function() {
     var frame = param.elem;
@@ -33,15 +36,16 @@ var pianola = function(param) {
         <span id="note-info-desc"></span> \
       </div> \
       <div id="pianola-viewer"> \
-        <canvas id="tracker" width=1220 height=122px></canvas> \
-        <canvas id="piano" width=1220 height=122px> \
-        </canvas> \
+        <canvas id="tracker" width=1 height=130></canvas> \
+        <canvas id="piano" width=1 height=130></canvas> \
       </div> \
       <div class="pianola-controls-h"> \
         <span id="pianola-next" class="pianola-control pianola-button pianola-button-h" onselectstart="return false;">Next</span> \
         <span id="pianola-prev" class="pianola-control pianola-button pianola-button-h" onselectstart="return false;">Prev</span> \
         <span id="pianola-line" class="pianola-control pianola-button pianola-button-h" onselectstart="return false;">Lines</span> \
         <span id="pianola-play" class="pianola-control pianola-button pianola-button-h" onselectstart="return false;">Play</span> \
+        <span id="pianola-stop" class="pianola-control pianola-button pianola-button-h" onselectstart="return false;">Stop</span> \
+        <span id="pianola-rewind" class="pianola-control pianola-button pianola-button-h" onselectstart="return false;">Rewind</span> \
       </div> \
     </div>';
     document.getElementById("pianola-play").onclick = function() {
@@ -56,6 +60,13 @@ var pianola = function(param) {
     document.getElementById("pianola-line").onclick = function() {
       that.liner();
     };
+    document.getElementById("pianola-stop").onclick = function() {
+      that.stopper();
+    };
+    document.getElementById("pianola-rewind").onclick = function() {
+      that.rewinder();
+    };
+
     renderNotes(param.notes, param.time);
   }
 
@@ -63,21 +74,25 @@ var pianola = function(param) {
     var timeRe = /\d+/g;
     var number_of_beats = parseInt(timeRe.exec(timeSig));
     var beat_value = parseInt(timeRe.exec(timeSig));
+    num_of_beats = number_of_beats;
+
 
     var canvas = that.getCanvas();
-    var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
-
-    var ctx = renderer.getContext();
     var num_staves = countBeats(notesArray, number_of_beats) / beat_value;
+    that.getCanvas().width = (num_staves * (10+stave_length));
+    that.trackingCanvas().width = (num_staves * (10+stave_length));
+
+    var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
+    var ctx = renderer.getContext();
+
     var all_notes =[];
     for (var i = 0; i < num_staves; i++) {
-      var stave = new Vex.Flow.Stave(10+(i*500), 0, 500);
+      var stave = new Vex.Flow.Stave(10+(i*stave_length), 0, stave_length);
       if (i == 0) {
         stave.addClef("treble").setContext(ctx).draw();
       } else {
         stave.setContext(ctx).draw();
       }
-      console.log(stave);
       var notes = renderNotesInMeasure(i, notesArray, beat_value, number_of_beats, ctx, stave);
       all_notes.push(notes);
       if (i == 0) {
@@ -160,14 +175,11 @@ var pianola = function(param) {
     var beatsLength = 0;
     for (var i = 0; i < notesArray.length; i++) {
       beatsLength += noteLength(notesArray[i][1], beatNum)
-      //console.log(notesArray[i][2]);
     }
     return beatsLength;
   }
 
-  //@TODO should parse noteString to handle
-  // values above 32nd notes
-  // @TODO is this calculating correctly?
+  // @TODO should parse noteString to handle values above 32nd notes
   var noteLength = function(noteString, beatNum) {
     switch(noteString) {
       case "w":
@@ -219,17 +231,14 @@ var pianola = function(param) {
   }
 
   that.setNotes = function(arr) {
-    console.log(arr);
     for (var x = 0; x < arr.length; x++) {
       for (var y = 0; y < arr[x].length; y++) {
 
         if (x==0) {
           var starter = stave_start;
         } else {
-          //@TODO don't use fixed vals
-          var starter = x*530;
+          var starter = x*(stave_length + 30);
         }
-        //var starter = stave_start + x*500;
         notes.push({
           noteObj: arr[x][y],
           noteLocation: arr[x][y].tickContext.x + starter,
@@ -254,7 +263,7 @@ var pianola = function(param) {
 
   that.clearBar = function() {
     cx = that.trackingCanvas().getContext('2d');
-    cx.clearRect(bar_location-1, 0, 6, 122);
+    cx.clearRect(bar_location-1, 0, 6, that.trackingCanvas().height);
   }
 
   that.liner = function() {
@@ -263,9 +272,9 @@ var pianola = function(param) {
     for (var i = 0; i < arr.length; i++) {
       if (!lines) {
         cx.fillStyle = '#FFA033';
-        cx.fillRect(arr[i], 0, 4, 122);
+        cx.fillRect(arr[i], 0, 4, that.trackingCanvas().height);
       } else {
-        cx.clearRect(arr[i]-1, 0, 6, 122);
+        cx.clearRect(arr[i]-1, 0, 6, that.trackingCanvas().height);
       }
     }
     if (lines) {
@@ -281,14 +290,32 @@ var pianola = function(param) {
     if (note) {
       var nnl = next_note_locations.length;
       var nl = notes.length;
-      var pass = nl - nnl - 1;
-      var pass = notes[pass];
-      console.log(pass);
+      var passer = nl - nnl - 1;
+      var pass = notes[passer];
       noteFactHelper(pass);
-      console.log(note);
+      // if the note location is past the width of the viewer,
+      // set scrollLeft to show the note
+      if (notes[passer+1] && note >= that.elem().scrollLeft + that.elem().clientWidth) {
+        that.scrollCanvasToNote('ltr', false, note);
+      }
+      if (!notes[passer+1]) {
+        that.scrollCanvasToNote('ltr', true);
+      }
       prev_note_locations.unshift(note);
       cx.fillStyle = '#FFA033';
-      cx.fillRect(note, 0, 4, 122);
+      cx.fillRect(note, 0, 4, that.trackingCanvas().height);
+    }
+  }
+
+  that.scrollCanvasToNote = function(dir, last, note) {
+    if (dir == "ltr") {
+      if (last) {
+        that.elem().scrollLeft = that.getCanvas().width - that.elem().clientWidth;
+      } else {
+        that.elem().scrollLeft = 30 + (note - that.elem().clientWidth);
+      }
+    } else if (dir == "rtl") {
+
     }
   }
 
@@ -303,9 +330,16 @@ var pianola = function(param) {
         var pass = null;
       }
       noteFactHelper(pass);
+      if (pass && pass.noteLocation <= that.elem().scrollLeft) {
+        if (notes[pnl-2]) {
+          that.elem().scrollLeft = notes[pnl-2].noteLocation - 30;
+        } else {
+          that.elem().scrollLeft = 0;
+        }
 
+      }
       next_note_locations.unshift(note);
-      cx.clearRect(note - 1, 0, 6, 122);
+      cx.clearRect(note - 1, 0, 6, that.trackingCanvas().height);
     }
   }
 
@@ -361,10 +395,6 @@ var pianola = function(param) {
     desc.innerText = descText;
   }
 
-  var tempo = 120,
-      running = false,
-      bar_running = false;
-
   that.scrollToTheLeft = function() {
     that.elem().scrollLeft++;
     scroll = that.elem().scrollLeft;
@@ -374,6 +404,52 @@ var pianola = function(param) {
     }
     else {
       sc = setTimeout(that.scrollToTheLeft, (1/tempo)*1000);
+    }
+  }
+
+  that.scrollLeftByNote = function() {
+    if (running === false && bar_running === false) {
+
+    }
+    var widthOfViewerWindow = that.elem().clientWidth,
+        widthOfCanvas       = that.getCanvas().width,
+        currentBarPos       = bar_location,
+        widthOfBar          = 4,
+        heightOfBar         = that.getCanvas().height,
+        notesCopy           = notes.slice(0),
+        currentNote         = player_current_note;
+    var redrawBar = function() {
+      var cx = that.trackingCanvas().getContext('2d');
+      cx.clearRect(currentBarPos-1, 0, widthOfBar+2, heightOfBar);
+      currentBarPos = notesCopy[currentNote].noteLocation;
+      noteFactHelper(notesCopy[currentNote]);
+      that.setBarLocation(currentBarPos);
+      cx.fillRect(currentBarPos, 0, widthOfBar, heightOfBar);
+      ++player_current_note;
+    };
+
+    // check if tracking bar is halfway across viewer window && width of canvas > width of window
+    // if so, scroll bar and window
+    if (running && bar_running && widthOfCanvas > widthOfViewerWindow && stave_end > widthOfViewerWindow && currentBarPos >= ((widthOfViewerWindow / 2) + (widthOfBar / 2)) ) {
+      redrawBar();
+      //that.elem().scrollLeft++;
+      that.scrollCanvasToNote('ltr', false, currentBarPos*1.3);
+    }
+    else {
+      redrawBar();
+    }
+    var length = noteLength(notesCopy[currentNote].noteDuration, num_of_beats);
+    // check if we've reached end of canvas.
+    if (running === false && player_current_note >= notes.length) {
+      bar_running = false;
+      //return;
+    }
+    else if ((that.elem().scrollLeft + widthOfViewerWindow) >= widthOfCanvas) {
+      running = false;
+      sc = setTimeout(that.scrollLeftByNote, (60/tempo)*length*1000);
+    }
+    else {
+      sc = setTimeout(that.scrollLeftByNote, (60/tempo)*length*1000);
     }
   }
 
@@ -405,13 +481,12 @@ var pianola = function(param) {
     else {
       redrawBar();
     }
-    console.log(stave_end);
     // check if we've reached end of canvas.
-    if (running === false && currentBarPos >= /*widthOfCanvas - 10*/stave_end) {
+    if (running === false && currentBarPos >= widthOfCanvas-10) {
       bar_running = false;
       return;
     }
-    else if ((scroll + widthOfViewerWindow/* + 20*/) >= stave_end/*widthOfCanvas*/) {
+    else if ((scroll + widthOfViewerWindow) >= widthOfCanvas) {
       running = false;
       sc = setTimeout(that.scrollLeftFull, (1/tempo)*1000);
     }
@@ -421,11 +496,29 @@ var pianola = function(param) {
 
   }
 
+  //@TODO hitting play multiple times speeds up bar
+  //@TODO player bar erases line bars
   that.player = function() {
-    console.log("now playing at " + tempo + " bpm");
-    running = true;
-    bar_running = true;
-    that.scrollLeftFull();
+    if (!running && !bar_running) {
+      console.log("now playing at " + tempo + " bpm");
+      running = true;
+      bar_running = true;
+      //that.scrollLeftFull();
+      that.scrollLeftByNote();
+    }
+  }
+
+  that.stopper = function() {
+    running = false;
+    bar_running = false;
+  }
+
+  that.rewinder = function() {
+    that.stopper();
+    that.elem().scrollLeft = 0;
+    that.clearBar();
+    that.setBarLocation(Math.floor(stave_start));
+    player_current_note = 0;
   }
 
   return that;
