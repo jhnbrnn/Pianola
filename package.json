@@ -1,0 +1,25 @@
+{
+  "name": "pianola",
+  "version": "0.1.0",
+  "description": "A library for reading & playing music in the browser.",
+  "main": "src/pianola.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhnbrnn/Pianola.git"
+  },
+  "author": "John Brennan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jhnbrnn/Pianola/issues"
+  },
+  "homepage": "https://github.com/jhnbrnn/Pianola#readme",
+  "dependencies": {
+    "vexflow": "^1.2.45"
+  },
+  "devDependencies": {
+    "standard": "^6.0.8"
+  }
+}
