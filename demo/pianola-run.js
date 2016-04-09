@@ -1,27 +1,24 @@
-$(document).ready(function() {
+/* global pianola */
 
-});
-
-window.onload = function() {
-
+window.onload = function () {
   var p = pianola({
-    "elem": document.getElementById("pianola"),
-    "time": "4/4",
-    "notes": [
-      ["c/4", "q"],
-      ["d/4", "q"],
-      ["r", "q"],
-      [["c/4","e/4","g/4"], "q", "chord"],
-      ["r", "h"],
-      [[["c/4", "16"],["d/4", "16"],["e/4", '16'],["f/4", '16']], "q", "beam"],
-      ["c/6", "q"]
+    elem: document.getElementById('pianola'),
+    time: '4/4',
+    notes: [
+      ['c/4', 'q'],
+      ['d/4', 'q'],
+      ['r', 'q'],
+      [['c/4', 'e/4', 'g/4'], 'q', 'chord'],
+      ['r', 'h'],
+      [[['c/4', '16'], ['d/4', '16'], ['e/4', '16'], ['f/4', '16']], 'q', 'beam'],
+      ['c/6', 'q']
     ]
-  });
+  })
 
-  p.init();
+  p.init()
 
-  //var canvas = p.getCanvas();
-  //var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
+  // var canvas = p.getCanvas();
+  // var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
 
   // var ctx = renderer.getContext();
   // var stave = new Vex.Flow.Stave(10, 0, 500);

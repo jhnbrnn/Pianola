@@ -1,36 +1,36 @@
 
-var context;
-window.addEventListener('load', init, false);
-function init() {
+var context
+window.addEventListener('load', init, false)
+function init () {
   try {
-    var dogBarkingBuffer = null;
-    context = new webkitAudioContext();
-    function loadDogSound(url) {
-      var request = new XMLHttpRequest();
-      request.open('GET', url, true);
-      request.responseType = 'arraybuffer';
+    var dogBarkingBuffer = null
+    context = new webkitAudioContext()
+    loadDogSound('http://localhost/Epoq.ogg')
 
-      request.onload = function() {
-        context.decodeAudioData(request.response, function(buffer) {
-          dogBarkingBuffer = buffer;
-        });
-      }
-      request.send();
+    document.getElementById('play').onclick = function () {
+      playSound(dogBarkingBuffer)
     }
-    function playSound(buffer) {
-      var source = context.createBufferSource();
-      source.buffer = buffer;
-      source.connect(context.destination);
-      source.noteOn(0);
-    }
-    loadDogSound("http://localhost/Epoq.ogg");
-
-    document.getElementById('play').onclick = function() {
-      playSound(dogBarkingBuffer);
-    }
-  }
-  catch(e) {
-    alert('web audio API is not supported in this browser');
+  } catch (e) {
+    alert('web audio API is not supported in this browser')
   }
 }
 
+function playSound (buffer) {
+  var source = context.createBufferSource()
+  source.buffer = buffer
+  source.connect(context.destination)
+  source.noteOn(0)
+}
+
+function loadDogSound (url) {
+  var request = new XMLHttpRequest()
+  request.open('GET', url, true)
+  request.responseType = 'arraybuffer'
+
+  request.onload = function () {
+    context.decodeAudioData(request.response, function (buffer) {
+      dogBarkingBuffer = buffer
+    })
+  }
+  request.send()
+}
