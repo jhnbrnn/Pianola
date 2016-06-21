@@ -22,6 +22,7 @@
     "bourbon-neat": "^1.7.4",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
+    "standard": "^7.1.2",
     "vexflow": "^1.2.45"
   },
   "devDependencies": {
